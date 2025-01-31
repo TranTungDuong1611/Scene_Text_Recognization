@@ -35,7 +35,7 @@ def get_gt_bboxes(location_path):
         # get the image size
         w = image[1].get('x')
         h = image[1].get('y')
-        gt_imagesizes.append([w, h])
+        gt_imagesizes.append([h, w])
         
         # bboxes in the image
         bbs = []
@@ -65,6 +65,26 @@ def visualize_gt_bboxes(image_path, gt_locations):
     plt.axis('off')
     plt.show()
     
+def visualize_gt_bboxes_yolo(image_path, gt_location_yolo):
+    image = cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    
+    image_height, image_width = image.shape[:2]
+    
+    # Convert to original format
+    for data in gt_location_yolo:
+        xc, yc, w, h = data[1:]
+        xmin = int((xc - w/2) * image_width)
+        ymin = int((yc - h/2) * image_height)
+        xmax = int((xc + w/2) * image_width)
+        ymax = int((yc + h/2) * image_height)
+        
+        image = cv2.rectangle(image, (xmin, ymin), (xmax, ymax), color=(255, 0, 0), thickness=2)
+        
+    plt.imshow(image)
+    plt.axis('off')
+    plt.show()
+    
     
 def convert_yolo_format(gt_locations, gt_imagesizes):
     gt_locations_yolo = []
@@ -73,7 +93,7 @@ def convert_yolo_format(gt_locations, gt_imagesizes):
         gt_location_yolo = []
         for gt_location in image:
             x, y, w, h = gt_location
-            image_width, image_height = image_size
+            image_height, image_width = image_size
             
             xc = (x + w/2) / float(image_width)
             yc = (y + h/2) / float(image_height)
@@ -112,6 +132,8 @@ def save_data_into_yolo_folder(data, src_img_dir, save_dir):
             for label in dt[1]:
                 label_str = " ".join(map(str, label))
                 f.write(f'{label_str}\n')
+
+
 
 seed = 0
 val_size = 0.2
