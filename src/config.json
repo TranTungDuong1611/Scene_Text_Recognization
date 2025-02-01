@@ -1,0 +1,10 @@
+{
+    "yolov11":
+    {
+        "epochs": 100,
+        "image_size": 640,
+        "cache": true,
+        "patience": 20,
+        "plots": true
+    }
+}
