@@ -164,7 +164,6 @@ def build_vocab(root_dir):
     return char_to_idx, idx_to_char, labels
     
 
-
 def encode(label, char_to_idx, labels):
     max_length_label = np.max([len(lb) for lb in labels])
     
@@ -185,13 +184,14 @@ def encode(label, char_to_idx, labels):
                     )
     return padded_label, length
 
-def decode(encoded_label, idx_to_char):
+def decode(encoded_label, idx_to_char, blank_char='@'):
     label = []
     for i in range(len(encoded_label)):
         if encoded_label[i] == 0:
             break
-        else:
+        elif (i == 0 or encoded_label[i] != encoded_label[i-1]) and encoded_label[i] != char_to_idx[blank_char]:
             label.append(idx_to_char[encoded_label[i]])
+                
     label = "".join(label)
     return label
 
