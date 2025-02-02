@@ -9,11 +9,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-root_path = 'Dataset'
-# words_path = os.path.join(root_path, 'words.xml')
-# tree = ET.parse(words_path)
-# root = tree.getroot()
-
 
 def extract_data_from_xml(root_path):
     words_path = os.path.join(root_path, 'words.xml')
@@ -161,15 +156,26 @@ def build_vocab(root_dir):
         idx: char for char, idx in char_to_idx.items()
     }
     
-    return char_to_idx, idx_to_char, labels
+    return char_to_idx, idx_to_char
     
+def get_imagepaths_and_labels(root_path):
+    img_paths = []
+    labels = []
+    
+    # Read labels from text file
+    with open(os.path.join(save_dir, 'labels.txt'), "r") as f:
+        for label in f:
+            labels.append(label.strip().split("\t")[1])
+            img_paths.append(label.strip().split("\t")[0])
+    
+    return img_paths, labels
 
 def encode(label, char_to_idx, labels):
     max_length_label = np.max([len(lb) for lb in labels])
     
     # encode label
     encoded_label = torch.tensor(
-                        [char_to_idx[char] for char in label],
+                        [char_to_idx[char.lower()] for char in label],
                         dtype=torch.int32
                     )
     label_len = len(encoded_label)
@@ -195,8 +201,8 @@ def decode(encoded_label, idx_to_char, blank_char='@'):
     label = "".join(label)
     return label
 
-
+root_path = 'Dataset'
 image_paths, image_sizes, bboxes, image_labels = extract_data_from_xml(root_path)
 save_dir = 'Dataset/ocr_dataset'
 split_bboxes_from_image(image_paths, image_labels, bboxes, save_dir)
-char_to_idx, idx_to_char, labels = build_vocab(root_path)
+char_to_idx, idx_to_char = build_vocab(root_path)
