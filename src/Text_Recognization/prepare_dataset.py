@@ -4,6 +4,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 import cv2
 import matplotlib.pyplot as plt
+import argparse
 
 import torch
 import torch.nn as nn
@@ -131,7 +132,7 @@ def build_vocab(root_dir):
     labels = []
     
     # Read labels from text file
-    with open(os.path.join(save_dir, 'labels.txt'), "r") as f:
+    with open(os.path.join(root_dir, 'ocr_dataset', 'labels.txt'), "r") as f:
         for label in f:
             labels.append(label.strip().split("\t")[1])
             img_paths.append(label.strip().split("\t")[0])
@@ -163,7 +164,7 @@ def get_imagepaths_and_labels(root_path):
     labels = []
     
     # Read labels from text file
-    with open(os.path.join(save_dir, 'labels.txt'), "r") as f:
+    with open(os.path.join(root_path, 'ocr_dataset', 'labels.txt'), "r") as f:
         for label in f:
             labels.append(label.strip().split("\t")[1])
             img_paths.append(label.strip().split("\t")[0])
@@ -190,7 +191,7 @@ def encode(label, char_to_idx, labels):
                     )
     return padded_label, length
 
-def decode(encoded_label, idx_to_char, blank_char='@'):
+def decode(encoded_label, idx_to_char, char_to_idx, blank_char='@'):
     label = []
     for i in range(len(encoded_label)):
         if encoded_label[i] == 0:
@@ -201,8 +202,17 @@ def decode(encoded_label, idx_to_char, blank_char='@'):
     label = "".join(label)
     return label
 
-root_path = 'Dataset'
-image_paths, image_sizes, bboxes, image_labels = extract_data_from_xml(root_path)
-save_dir = 'Dataset/ocr_dataset'
-split_bboxes_from_image(image_paths, image_labels, bboxes, save_dir)
-char_to_idx, idx_to_char = build_vocab(root_path)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", type=str, default=os.getcwd(), help="Path to the root directory")
+    args = parser.parse_args()
+    
+    root_path = os.path.join(args.path, 'Dataset')
+
+    image_paths, image_sizes, bboxes, image_labels = extract_data_from_xml(root_path)
+    save_dir = 'Dataset/ocr_dataset'
+    split_bboxes_from_image(image_paths, image_labels, bboxes, save_dir)
+    char_to_idx, idx_to_char = build_vocab(root_path)
+
+if __name__ == '__main__':
+    main()
