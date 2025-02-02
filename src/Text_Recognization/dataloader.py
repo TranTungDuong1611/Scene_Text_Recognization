@@ -87,12 +87,14 @@ class STRDataset(Dataset):
         
         return image, label_encoded, length
     
+def get_dataloader():
+    train_dataset = STRDataset(X_train, y_train, char_to_idx, transforms=data_transforms['train'])
+    train_loader = DataLoader(train_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
 
-train_dataset = STRDataset(X_train, y_train, char_to_idx, transforms=data_transforms['train'])
-train_loader = DataLoader(train_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
+    val_dataset = STRDataset(X_val, y_val, char_to_idx, transforms=data_transforms['val'])
+    val_loader = DataLoader(val_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
 
-val_dataset = STRDataset(X_val, y_val, char_to_idx, transforms=data_transforms['val'])
-val_loader = DataLoader(val_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
-
-test_dataset = STRDataset(X_test, y_test, char_to_idx, transforms=data_transforms['val'])
-test_loader = DataLoader(test_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
+    test_dataset = STRDataset(X_test, y_test, char_to_idx, transforms=data_transforms['val'])
+    test_loader = DataLoader(test_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
+    
+    return train_loader, val_loader, test_loader
