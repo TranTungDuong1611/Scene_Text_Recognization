@@ -3,8 +3,6 @@ import torchvision
 import json
 import sys
 
-# sys.path.append('E:\AI_Project\Scene_Text_Recognization')
-
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from sklearn.model_selection import train_test_split
@@ -50,21 +48,6 @@ def load_json_config(config_path):
         
     return config
 
-val_size = 0.1
-test_size = 0.1
-root_path = 'Dataset'
-config_path = 'src/config.json'
-
-# get image paths and labels
-image_paths, labels = get_imagepaths_and_labels(root_path)
-char_to_idx, idx_to_char = build_vocab(root_path)
-
-
-config = load_json_config(config_path)
-
-X_train, X_val, y_train, y_val = train_test_split(image_paths, labels, test_size=val_size, random_state=42, shuffle=True)
-X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=test_size, random_state=42, shuffle=True)
-
 # Dataloader
 class STRDataset(Dataset):
     def __init__(self, image_paths, labels, char_to_idx, transforms=None):
@@ -77,17 +60,31 @@ class STRDataset(Dataset):
         return len(self.image_paths)
     
     def __getitem__(self, idx):
-        image = cv2.imread(image_paths[idx])
+        image = cv2.imread(self.image_paths[idx])
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         if self.transforms:
             image = self.transforms(image)
         
-        label_encoded, length = encode(self.labels[idx], char_to_idx, self.labels)
+        label_encoded, length = encode(self.labels[idx], self.char_to_idx, self.labels)
         
         return image, label_encoded, length
     
 def get_dataloader():
+    val_size = 0.1
+    test_size = 0.1
+    root_path = 'Dataset'
+    config_path = 'src/config.json'
+
+    # get image paths and labels
+    image_paths, labels = get_imagepaths_and_labels(root_path)
+    char_to_idx, idx_to_char = build_vocab(root_path)
+
+
+    config = load_json_config(config_path)
+
+    X_train, X_val, y_train, y_val = train_test_split(image_paths, labels, test_size=val_size, random_state=42, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=test_size, random_state=42, shuffle=True)
     train_dataset = STRDataset(X_train, y_train, char_to_idx, transforms=data_transforms['train'])
     train_loader = DataLoader(train_dataset, batch_size=config['CRNN']['batch_size'], shuffle=True)
 
