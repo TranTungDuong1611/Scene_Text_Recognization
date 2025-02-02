@@ -21,9 +21,6 @@ data_transforms = {
                 contrast=0.5,
                 saturation=0.5
             ),
-            transforms.Grayscale(
-                num_output_channels=1
-            ),
             transforms.GaussianBlur(3),
             transforms.RandomAffine(
                 degrees=1,
@@ -86,9 +83,9 @@ class STRDataset(Dataset):
         if self.transforms:
             image = self.transforms(image)
         
-        label_encoded, _ = encode(self.labels[idx], char_to_idx, self.labels)
+        label_encoded, length = encode(self.labels[idx], char_to_idx, self.labels)
         
-        return image, label_encoded
+        return image, label_encoded, length
     
 
 train_dataset = STRDataset(X_train, y_train, char_to_idx, transforms=data_transforms['train'])
