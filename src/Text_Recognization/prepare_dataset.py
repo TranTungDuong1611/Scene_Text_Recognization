@@ -3,6 +3,7 @@ import random
 import numpy as np
 import xml.etree.ElementTree as ET
 import cv2
+import json
 import matplotlib.pyplot as plt
 import argparse
 
@@ -147,7 +148,7 @@ def build_vocab(root_dir):
     vocab = list(sorted(vocab))
     vocab = "".join(vocab)
     blank_char = '@'
-    vocab += blank_char
+    vocab = blank_char + vocab
     
     # build a dictionary convert from vocab to idx and idx to vocab
     char_to_idx = {
@@ -187,12 +188,13 @@ def encode(label, char_to_idx, labels):
     padded_label = F.pad(
                         encoded_label,
                         (0, max_length_label-label_len),
-                        value=-1
+                        value=0
                     )
     return padded_label, length
 
 def decode(encoded_label, idx_to_char, char_to_idx, blank_char='@'):
     label = []
+    encoded_label = encoded_label.detach().numpy()
     for i in range(len(encoded_label)):
         if encoded_label[i] == 0:
             break
