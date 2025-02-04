@@ -58,6 +58,7 @@ def visualize_gt_bboxes(image_path, gt_locations):
     
     for gt_location in gt_locations:
         x, y, width, height = gt_location
+        x, y, width, height = int(x), int(y), int(width), int(height)
         
         image = cv2.rectangle(image, (x, y), (x+width, y+height), color=(255, 0, 0), thickness=2)
         
@@ -137,10 +138,10 @@ def save_data_into_yolo_folder(data, src_img_dir, save_dir):
 
 seed = 0
 val_size = 0.2
-test_size = 0.15
+test_size = 0.125
 dataset = [[gt_imagepath, gt_location_yolo] for gt_imagepath, gt_location_yolo in zip(gt_imagepaths, gt_locations_yolo)]
-train_data, test_data = train_test_split(dataset, test_size=test_size, random_state=42, shuffle=True)
-train_data, val_data = train_test_split(train_data, test_size=val_size, random_state=42, shuffle=True)
+train_data, val_data = train_test_split(dataset, test_size=val_size, random_state=42, shuffle=True)
+train_data, test_data = train_test_split(train_data, test_size=test_size, random_state=42, shuffle=True)
 
 save_yolo_data_dir = 'yolo_data'
 os.makedirs(save_yolo_data_dir, exist_ok=True)
