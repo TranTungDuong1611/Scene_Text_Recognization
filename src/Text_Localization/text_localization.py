@@ -25,3 +25,9 @@ results = model.train(
     patience=config['yolov11']['patience'],
     plots=config['yolov11']['plots']
 )
+
+# Evaluate model
+model_path = 'checkpoints/yolov11m.pt'
+model = YOLO(model_path)
+
+metrics = model.val()
