@@ -90,14 +90,15 @@ def training_loop(model, train_loader, val_loader, learning_rate, epochs, optimi
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--root_path', type=str, default=os.getcwd(), help='Path to the root directory')
+    parser.add_argument('--checkpoints_path', type=str, default=os.path.join(os.getcwd(), 'checkpoints'), help='Path to the checkpoint directory')
     
     args = parser.parse_args()
     config_path = 'src/config.json'
-    root_path = os.path.join(args.root_path, 'Dataset')
+    dataset_path = os.path.join(args.root_path, 'Dataset')
     config = load_json_config(config_path)
 
     # dictionary char and idx
-    char_to_idx, idx_to_char = build_vocab(root_path)
+    char_to_idx, idx_to_char = build_vocab(dataset_path)
 
     # model
     model = CRNN(vocab_size=config['vocab_size'], hidden_size=config['CRNN']['hidden_size'], n_layers=config['CRNN']['n_layers'])
@@ -134,6 +135,28 @@ def main():
         scheduler=scheduler,
         device=device
     )
+    
+    # save model
+    if not os.path.exists(args.checkpoints_path):
+        os.makedirs(args.checkpoints_path)
+        os.makedirs(os.path.join(args.checkpoints_path, 'losses'))
+    torch.save(model.state_dict(), os.path.join(args.checkpoints_path, 'crnn.pt'))
+    
+    # draw losses
+    fig, axis = plt.subplots(1, 2, figsize=(8, 8))
+    axis[0].plot(train_losses, label='train_loss')
+    axis[0].set_xlabel('Epochs')
+    axis[0].set_ylabel('Loss')
+    axis[0].axis('off')
+    axis[0].legend()
+    
+    axis[1].plot(val_losses, label='val_loss')
+    axis[1].set_xlabel('Epochs')
+    axis[1].set_ylabel('Loss')
+    axis[1].axis('off')
+    axis[1].legend()
+    
+    plt.savefig(os.path.join(args.checkpoints_path, 'losses', 'losses.png'))
     
 if __name__ == '__main__':
     main()
