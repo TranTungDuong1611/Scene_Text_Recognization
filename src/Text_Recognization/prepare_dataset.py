@@ -142,12 +142,13 @@ def build_vocab(root_dir):
     vocab = set()
     for label in labels:
         for i in range(len(label)):
-            vocab.add(label[i].lower())
+            vocab.add(label[i])
             
     # "blank" character
     vocab = list(sorted(vocab))
     vocab = "".join(vocab)
     blank_char = '@'
+    vocab = vocab + 'z'
     vocab = blank_char + vocab
     
     # build a dictionary convert from vocab to idx and idx to vocab
