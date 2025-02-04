@@ -13,7 +13,7 @@ data_transforms = {
     "train": transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Resize((100, 420)),
+            transforms.Resize((100, 400)),
             transforms.ColorJitter(
                 brightness=0.5,
                 contrast=0.5,
@@ -35,7 +35,7 @@ data_transforms = {
     "val": transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Resize((100, 420)),
+            transforms.Resize((100, 400)),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ]
     )
