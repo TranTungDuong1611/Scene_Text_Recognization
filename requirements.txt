@@ -4,8 +4,5 @@ torch
 torchvision
 ultralytics
 matplotlib
-xml
-yaml
-json
 scikit-learn
 tqdm
