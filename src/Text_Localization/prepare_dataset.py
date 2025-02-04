@@ -164,7 +164,7 @@ save_data_into_yolo_folder(
 class_label = ['text']
 # Create data.yaml file
 data_yaml = {
-    "path": 'yolo_data',
+    "path": '../yolo_data',
     'train': 'train/images',
     'test': 'test/images',
     'val': 'val/images',
