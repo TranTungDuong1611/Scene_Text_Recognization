@@ -10,7 +10,8 @@ Download the dataset [here](https://drive.google.com/file/d/1kUy2tuH-kKBlFCNA0a9
 
 ## Results
 ![Result 1](images/result1.png)
-![Result 2](images/result2.png)
+![Result 6](images/result6.png)
+![Result 7](images/result7.png)
 ![Result 3](images/result3.png)
 ![Result 4](images/result4.png)
 ![Result 5](images/result5.png)
