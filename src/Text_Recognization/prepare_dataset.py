@@ -4,6 +4,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 import cv2
 import json
+import pickle
 import matplotlib.pyplot as plt
 import argparse
 
@@ -149,7 +150,7 @@ def build_vocab(root_dir):
     vocab = "".join(vocab)
     blank_char = '@'
     vocab = vocab + 'z'
-    vocab = blank_char + vocab
+    vocab = vocab + blank_char
     
     # build a dictionary convert from vocab to idx and idx to vocab
     char_to_idx = {
@@ -158,6 +159,13 @@ def build_vocab(root_dir):
     idx_to_char = {
         idx: char for char, idx in char_to_idx.items()
     }
+    
+    # save
+    with open('src/encode.pkl', "wb") as file:
+        pickle.dump(char_to_idx, file)
+        
+    with open('src/decode.pkl', "wb") as file:
+        pickle.dump(idx_to_char, file)
     
     return char_to_idx, idx_to_char
     
@@ -178,7 +186,7 @@ def encode(label, char_to_idx, labels):
     
     # encode label
     encoded_label = torch.tensor(
-                        [char_to_idx[char.lower()] for char in label],
+                        [char_to_idx[char] for char in label],
                         dtype=torch.int32
                     )
     label_len = len(encoded_label)
