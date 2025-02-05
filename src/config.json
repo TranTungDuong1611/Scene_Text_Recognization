@@ -20,5 +20,5 @@
         "scheduler_step_size": 30
     },
     "blank_char": "@",
-    "vocab_size": 73
+    "vocab_size": 74
 }
