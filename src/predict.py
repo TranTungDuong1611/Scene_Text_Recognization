@@ -29,7 +29,12 @@ def load_json_config(config_path):
 config = load_json_config('src/config.json')
 
 # char to idx
-char_to_idx, idx_to_char = build_vocab('Dataset')
+with open('src/encode.pkl', "rb") as f:
+    char_to_idx = pickle.load(f)
+
+# idx to char
+with open('src/decode.pkl', "rb") as f:
+    idx_to_char = pickle.load(f)
 
 # text detection model
 text_det_model_path = 'checkpoints/yolov11m.pt'
@@ -39,7 +44,7 @@ yolo = YOLO(text_det_model_path)
 text_rec_model_path = 'checkpoints/crnn_extend_vocab.pt'
 
 # rcnn model
-rcnn_model = CRNN(vocab_size=74, hidden_size=config['CRNN']['hidden_size'], n_layers=config['CRNN']['n_layers'])
+rcnn_model = CRNN(vocab_size=config['vocab_size'], hidden_size=config['CRNN']['hidden_size'], n_layers=config['CRNN']['n_layers'])
 rcnn_model.load_state_dict(torch.load(text_rec_model_path, weights_only=True, map_location=torch.device('cpu')))
 
 def text_detection(img_path, text_det_model):
