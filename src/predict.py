@@ -41,7 +41,7 @@ text_det_model_path = 'checkpoints/yolov11m.pt'
 yolo = YOLO(text_det_model_path)
 
 # text recognition model
-text_rec_model_path = 'checkpoints/crnn_extend_vocab.pt'
+text_rec_model_path = 'checkpoints/crnn_extend_vocab_size.pt'
 
 # rcnn model
 rcnn_model = CRNN(vocab_size=config['vocab_size'], hidden_size=config['CRNN']['hidden_size'], n_layers=config['CRNN']['n_layers'])
