@@ -25,13 +25,18 @@ Below are several examples demonstrating the performance of the system:
 ## Deploy on Hugging Face
 Try the live demo on Hugging Face Spaces: [Scene Text Recognition](https://huggingface.co/spaces/TungDuong/Scene_Text_Recognization)
 
-![Hugging Face Interface](images/hg.png)
+![Hugging Face Interface](images/huggingface.png)
 
 ## How to Run
 1. Navigate to the project directory:
    ```bash
    cd path/to/Scene_Text_Recognization
    ```
+
+2. Install requirements.txt
+    ```bash
+    pip install -r src/requirements.txt
+    ```
 
 2. Run the prediction script:
     ```bash
